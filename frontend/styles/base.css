@@ -1,0 +1,20 @@
+:root {
+	--c : black;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	position: relative;
+	overflow: hidden;
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+}
+
+body * {
+	border: solid red 1px;
+}
