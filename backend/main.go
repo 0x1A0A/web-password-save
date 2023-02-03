@@ -27,6 +27,9 @@ func main() {
 
 	jwt_router := router.Use(middleware.Authorize())
 	jwt_router.POST("/group", handler.Create_group)
+	jwt_router.POST("/data", handler.Craete_data)
+	jwt_router.GET("/groups", handler.Get_groups)
+	jwt_router.GET("/datas", handler.Get_datas)
 
 	router.Run("localhost:6000")
 

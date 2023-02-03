@@ -11,11 +11,11 @@ import (
 
 // claim JWT
 func Authorize() gin.HandlerFunc {
-	return func (c *gin.Context) {
+	return func(c *gin.Context) {
 		jwttok := c.Request.Header.Get("Authorization")
 
-		if jwttok =="" {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{ "Err":"No Authorization header" })
+		if jwttok == "" {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Err": "No Authorization header"})
 			return
 		}
 
@@ -24,17 +24,16 @@ func Authorize() gin.HandlerFunc {
 		if len(ext) == 2 {
 			jwttok = strings.TrimSpace(ext[1])
 		} else {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{ "Err":"Incorrect format"})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Err": "Incorrect format"})
 			return
 		}
 
-		tok, _ := jwt.ParseWithClaims( jwttok, &jwt.RegisteredClaims{}, func (c *jwt.Token) (interface{}, error){
-			return []byte( os.Getenv("JWT_SECRET")), nil
-		} )
-	
-		claims, ok := tok.Claims.(*jwt.RegisteredClaims);
+		tok, _ := jwt.ParseWithClaims(jwttok, &jwt.RegisteredClaims{}, func(c *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("JWT_SECRET")), nil
+		})
 
-		
+		claims, ok := tok.Claims.(*jwt.RegisteredClaims)
+
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, "can't cast to registredclaim")
 			return
@@ -50,7 +49,7 @@ func Authorize() gin.HandlerFunc {
 			return
 		}
 
-		c.Request.Header.Set("user_id",claims.Subject)
+		c.Request.Header.Set("user_id", claims.Subject)
 
 		c.Next()
 	}

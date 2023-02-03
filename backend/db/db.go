@@ -48,12 +48,12 @@ func Connect() {
 func setindex() {
 	collection := db.Collection("Users")
 
-	res, err :=collection.Indexes().CreateOne(context.TODO(), mongo.IndexModel {Keys: bson.D{ {Key: "name", Value: 1} }})
+	res, err := collection.Indexes().CreateOne(context.TODO(), mongo.IndexModel{Keys: bson.D{{Key: "name", Value: 1}}})
 
-	if err!=nil {
+	if err != nil {
 		println(err.Error())
 		return
 	}
 
-	println("index created "+res)
+	println("index created " + res)
 }

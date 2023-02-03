@@ -7,6 +7,6 @@ type UsersDoc struct {
 }
 
 type UserPayload struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	Name     string `bson:"name"`
+	Password string `bson:"passwd"`
 }

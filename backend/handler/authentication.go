@@ -43,20 +43,22 @@ func Login(c *gin.Context) {
 
 	// OK this user has valid credential
 	// gen and return JWT for them
-	secret,ok := os.LookupEnv("JWT_SECRET")
+	secret, ok := os.LookupEnv("JWT_SECRET")
 
-	if !ok { secret = "secret" }
-
-	claims := &jwt.RegisteredClaims {
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour*24)),
-		Issuer: "pass-man-authen",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
-		Subject: userDoc.Id,
+	if !ok {
+		secret = "secret"
 	}
 
-	token := jwt.NewWithClaims( jwt.SigningMethodHS256, claims )
+	claims := &jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+		Issuer:    "pass-man-authen",
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		Subject:   userDoc.Id,
+	}
 
-	signed, err := token.SignedString( []byte(secret) )
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	signed, err := token.SignedString([]byte(secret))
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, err.Error())
