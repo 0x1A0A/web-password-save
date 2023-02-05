@@ -17,8 +17,7 @@ func CORSMiddleware() gin.HandlerFunc {
 				"Authorization, "+
 				"accept, "+
 				"origin, "+
-				"Cache-Control, "+
-				"X-Requested-With",
+				"Cache-Control",
 		)
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
 

@@ -31,7 +31,7 @@ func main() {
 	jwt_router.GET("/groups", handler.Get_groups)
 	jwt_router.GET("/datas", handler.Get_datas)
 
-	router.Run("localhost:6000")
+	router.Run("0.0.0.0:8000")
 
 	defer func() {
 		if err := db.DB().Client().Disconnect(context.TODO()); err != nil {
