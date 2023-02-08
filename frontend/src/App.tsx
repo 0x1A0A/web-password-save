@@ -1,6 +1,19 @@
 import React from "react";
-import Login from "./component/login";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {Login, Home} from "./component";
+
 
 export default function App() {
-  return <Login></Login>;
+  const token = localStorage.getItem("passman-jwt-auth");
+
+  if (!token) return <Login></Login>;
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home></Home>,
+    },
+  ]);
+  
+  return (<RouterProvider router={router}></RouterProvider>);
 }

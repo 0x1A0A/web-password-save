@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 interface UserPayload {
   name: string;
@@ -6,7 +6,7 @@ interface UserPayload {
 }
 
 function user_valid(u: UserPayload) {
-  return u.name != "" && u.password != "";
+  return u.name !== "" && u.password !== "";
 }
 
 export default function Login() {
@@ -25,7 +25,7 @@ export default function Login() {
   };
 
   const loginClick = function () {
-    return (event: React.MouseEvent<HTMLButtonElement>) => {
+    return (_event: React.MouseEvent<HTMLButtonElement>) => {
       if (user_valid(payload)) {
         const uri = encodeURI(`http://${SERVER}:${PORT}/auth`);
 
@@ -36,11 +36,12 @@ export default function Login() {
         };
 
         fetch(uri, requestOption)
-          .then((res) => {
-            return res.json();
-          })
+          .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            if (data.Ok) {
+              localStorage.setItem("passman-jwt-auth", data.Ok.token);
+              window.location.reload();
+            }
           });
       }
     };
