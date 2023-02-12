@@ -1,49 +1,37 @@
-import React from "react";
-
-interface UserPayload {
-  name: string;
-  password: string;
-}
-
-function user_valid(u: UserPayload) {
-  return u.name !== "" && u.password !== "";
-}
+import React, { useRef } from "react";
 
 export default function Login() {
   const SERVER = process.env.REACT_APP_SERVER;
   const PORT = process.env.REACT_APP_PORT;
 
-  const [payload, setPayload] = React.useState<UserPayload>({
-    name: "",
-    password: "",
-  });
-
-  const inputChangeHandler = function (key: keyof UserPayload) {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
-      setPayload({ ...payload, [key]: event.target.value });
-    };
-  };
+  const [usernameRef, passwordRef] = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
 
   const loginClick = function () {
     return (_event: React.MouseEvent<HTMLButtonElement>) => {
-      if (user_valid(payload)) {
-        const uri = encodeURI(`http://${SERVER}:${PORT}/auth`);
+      const uri = encodeURI(`http://${SERVER}:${PORT}/auth`);
 
-        const requestOption = {
-          method: "POST",
-          header: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        };
+      const payload = {
+        name: usernameRef.current?.value ?? "",
+        password: passwordRef.current?.value ?? "",
+      };
 
-        fetch(uri, requestOption)
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.Ok) {
-              localStorage.setItem("passman-jwt-auth", data.Ok.token);
-              window.location.reload();
-            }
-          });
-      }
+      const requestOption = {
+        method: "POST",
+        header: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      };
+
+      fetch(uri, requestOption)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.Ok) {
+            localStorage.setItem("passman-jwt-auth", data.Ok.token);
+            window.location.reload();
+          }
+        });
     };
   };
 
@@ -57,13 +45,13 @@ export default function Login() {
         <div className="flex h-auto flex-col gap-2 rounded-xl bg-slate-50 px-5 py-5 shadow-md">
           <input
             type="text"
-            onChange={inputChangeHandler("name")}
+            ref={usernameRef}
             placeholder="Username"
             className="rounded bg-transparent py-1 px-1 transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
           ></input>
           <input
             type="password"
-            onChange={inputChangeHandler("password")}
+            ref={passwordRef}
             placeholder="Password"
             className="rounded bg-transparent py-1 px-1 transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
           ></input>
