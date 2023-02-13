@@ -20,7 +20,7 @@ func Login(c *gin.Context) {
 	var user models.UserPayload
 
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -32,12 +32,12 @@ func Login(c *gin.Context) {
 
 	var userDoc models.UsersDoc
 	if err := result.Decode(&userDoc); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(userDoc.Password), []byte(user.Password)); err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -61,9 +61,9 @@ func Login(c *gin.Context) {
 	signed, err := token.SignedString([]byte(secret))
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
-	c.JSON(http.StatusOK, signed)
+	c.JSON(http.StatusOK, gin.H{"Ok": gin.H{"token": signed}})
 }

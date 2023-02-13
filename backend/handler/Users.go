@@ -15,7 +15,7 @@ import (
 func Create_User(c *gin.Context) {
 	var user models.UserPayload
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -24,7 +24,7 @@ func Create_User(c *gin.Context) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -34,9 +34,9 @@ func Create_User(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
-	c.JSON(http.StatusOK, res.InsertedID)
+	c.JSON(http.StatusOK, gin.H{"Ok": res.InsertedID})
 }

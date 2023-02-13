@@ -15,13 +15,13 @@ import (
 func Create_group(c *gin.Context) {
 	var group models.GroupPayload
 	if err := c.ShouldBindJSON(&group); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
 	user, err := primitive.ObjectIDFromHex(c.Request.Header.Get("user_id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -34,11 +34,11 @@ func Create_group(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
-	c.JSON(http.StatusOK, res.InsertedID)
+	c.JSON(http.StatusOK, gin.H{"Ok": res.InsertedID})
 }
 
 // Get /groups
@@ -47,7 +47,7 @@ func Get_groups(c *gin.Context) {
 	user, err := primitive.ObjectIDFromHex(c.Request.Header.Get("user_id"))
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -58,15 +58,15 @@ func Get_groups(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
 	var groups []models.GroupsDoc
 	if err := curr.All(context.TODO(), &groups); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
-	c.JSON(http.StatusOK, groups)
+	c.JSON(http.StatusOK, gin.H{"Ok": groups})
 }

@@ -16,7 +16,7 @@ import (
 func Craete_data(c *gin.Context) {
 	var data models.DataPayload
 	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"Err": gin.H{"str": gin.H{"Err": gin.H{"str": err.Error()}}}})
 		return
 	}
 
@@ -25,7 +25,7 @@ func Craete_data(c *gin.Context) {
 	gid, err := primitive.ObjectIDFromHex(data.Group)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -40,7 +40,7 @@ func Craete_data(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInsufficientStorage, err.Error())
+		c.JSON(http.StatusInsufficientStorage, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -72,7 +72,7 @@ db.Datas.aggregate([ {
 func Get_datas(c *gin.Context) {
 	user, err := primitive.ObjectIDFromHex(c.Request.Header.Get("user_id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
@@ -109,15 +109,15 @@ func Get_datas(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
 	var res []models.DataView
 	if err := cur.All(context.TODO(), &res); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"Err": gin.H{"str": err.Error()}})
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, gin.H{"Ok": res})
 }
