@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: passman
+data:
+  db_server: db-svc
+  db_port: "27017"
+  jwt_key: "change to your secret"

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deploy
+  labels:
+    app: server
+  namespace: passman
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: go-server
+          image: 0x1a0a/pwd-save
+          ports:
+          - containerPort: 8000
+          env:
+          - name: DB_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: db_server
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: db_port
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-root-auth
+                key: db-root-username
+          - name: DB_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: db-root-auth
+                key: db-root-password
+          - name: JWT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                  name: app-config
+                  key: jwt-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-svc
+  labels:
+    app: server
+  namespace: passman
+spec:
+  selector:
+    app: server
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 31000
+  type: NodePort

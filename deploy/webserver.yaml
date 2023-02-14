@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: frontend
+  namespace: passman
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: 0x1a0a/pwd-web
+        name: frontend-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-svc
+  labels:
+    app: frontend
+  namespace: passman
+spec:
+  ports:
+    - port: 8080
+      targetPort: 80
+      nodePort: 31080
+  selector:
+    app: frontend
+  type: NodePort

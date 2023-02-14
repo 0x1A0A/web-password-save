@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1
+
+## Build
+FROM golang AS build
+
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN go build -o /server
+
+## Deploy
+FROM debian:sid-slim
+
+COPY --from=build /server /usr/local/bin/server
+
+# specify your own environment
+ENV GIN_MODE=release
+ENV DB_SERVER=xxxxx
+ENV DB_PORT=27017
+ENV DB_USER=xxxx
+ENV DB_PASSWD=xxxx
+ENV JWT_SECRET="change to your secret"
+
+EXPOSE 8080
+CMD ["server"]

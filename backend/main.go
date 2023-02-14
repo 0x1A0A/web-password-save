@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 
-	"os"
 	"passwd-man/db"
 	"passwd-man/handler"
 	"passwd-man/middleware"
@@ -15,7 +14,6 @@ import (
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		println(err.Error())
-		os.Exit(1)
 	}
 
 	db.Connect()
