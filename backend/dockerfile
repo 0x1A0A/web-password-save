@@ -21,5 +21,9 @@ ENV DB_USER=xxxx
 ENV DB_PASSWD=xxxx
 ENV JWT_SECRET="change to your secret"
 
+RUN useradd goUser -u 1600
+USER 1600:1600
+HEALTHCHECK CMD /bin/curl localhost:8000 --fail || exit 1
+
 EXPOSE 8080
 CMD ["server"]

@@ -15,8 +15,13 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: 0x1a0a/pwd-web
+      - image: 0x1a0a/pwd-web:latest
         name: frontend-server
+        securityContext:
+          runAsUser: 1600
+          runAsGroup: 1600
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
 ---
 apiVersion: v1
 kind: Service
