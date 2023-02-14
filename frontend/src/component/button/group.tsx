@@ -3,17 +3,20 @@ import React from "react";
 interface GroupProps {
   name: String;
   select?: boolean;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-export default function Group({ name, select }: GroupProps) {
+export default function Group(props: GroupProps) {
   return (
-    <div className="group flex h-12">
+    <div className="group flex h-12"
+		onClick={props.onClick}
+	>
       <div
-        data-select={select ?? false}
+        data-select={props.select ?? false}
         className="flex grow items-center rounded-lg p-2 transition-all group-hover:bg-neutral-600 data-[select=true]:bg-neutral-600"
       >
         <div>
-          <span className="text-lg font-light text-slate-100"> {name} </span>
+          <span className="text-lg font-light text-slate-100"> {props.name} </span>
         </div>
       </div>
     </div>

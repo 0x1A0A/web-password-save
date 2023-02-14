@@ -11,3 +11,8 @@ type DataPayload struct {
 	Data  string `json:"data"`
 	Group string `json:"group_id"`
 }
+
+type DataStrip struct {
+	Id   string `bson:"_id" json:"id"`
+	Data string `bson:"data" json:"data"`
+}

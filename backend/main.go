@@ -29,6 +29,7 @@ func main() {
 	jwt_router.POST("/group", handler.Create_group)
 	jwt_router.POST("/data", handler.Craete_data)
 	jwt_router.GET("/groups", handler.Get_groups)
+	jwt_router.GET("/groups_data", handler.Get_groups_data)
 	jwt_router.GET("/datas", handler.Get_datas)
 
 	router.Run("0.0.0.0:8000")

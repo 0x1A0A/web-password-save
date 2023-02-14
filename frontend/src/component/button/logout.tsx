@@ -1,8 +1,8 @@
-import React, { memo } from "react";
+import React from "react";
 
 export default function Logout() {
   const logout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.reload();
   };
 

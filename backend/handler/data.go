@@ -44,7 +44,7 @@ func Craete_data(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, res.InsertedID)
+	c.JSON(http.StatusOK, gin.H{"Ok": res.InsertedID})
 }
 
 // GET /datas

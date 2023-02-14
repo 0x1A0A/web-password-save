@@ -4,7 +4,7 @@ import {Login, Home} from "./component";
 
 
 export default function App() {
-  const token = localStorage.getItem("passman-jwt-auth");
+  const token = sessionStorage.getItem("passman-jwt-auth");
 
   if (!token) return <Login></Login>;
 

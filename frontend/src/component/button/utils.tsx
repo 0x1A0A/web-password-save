@@ -1,8 +1,15 @@
 import React from "react";
 
-function SaveButton() {
+interface SaveButtonProps {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+function SaveButton(props: SaveButtonProps) {
   return (
-    <button className="rounded-md bg-sky-400 px-4 py-1 text-slate-100 hover:bg-sky-500">
+    <button
+      className="rounded-md bg-sky-400 px-4 py-1 text-slate-100 hover:bg-sky-500"
+      onClick={props.onClick}
+    >
       Save
     </button>
   );

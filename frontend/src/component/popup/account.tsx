@@ -1,13 +1,12 @@
-import React, { SetStateAction, useRef } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { SaveButton, CancleButton, EditButton } from "../button";
 
 interface TextInputProps {
   label: string;
   type?: string;
-  ref?: React.MutableRefObject<HTMLInputElement>;
 }
 
-function TextInput(props: TextInputProps) {
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
   return (
     <div className="flex overflow-hidden rounded-full bg-transparent ring-1 ring-neutral-200 focus-within:outline-none focus-within:ring-1 focus-within:ring-sky-400">
       <label className="h-full w-24 bg-neutral-200 px-3 py-1 ">
@@ -15,19 +14,25 @@ function TextInput(props: TextInputProps) {
       </label>
       <input
         className="grow bg-transparent px-2 focus:outline-none"
-        ref={props.ref}
+        ref={ref}
         type={props.type ?? "text"}
       ></input>
     </div>
   );
-}
+});
 
 interface AccountCreateProps {
   group: string;
   state?: React.Dispatch<React.SetStateAction<boolean>>;
+  callback?: (data: string) => Promise<void>;
 }
 
-function AccountCreate(props: AccountCreateProps) {
+const AccountCreate = function (props: AccountCreateProps) {
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const accountRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const descRef = useRef<HTMLTextAreaElement>(null);
+
   return (
     <div
       className="fixed z-50 flex h-screen w-screen items-center justify-center bg-black/80 backdrop-blur"
@@ -41,22 +46,42 @@ function AccountCreate(props: AccountCreateProps) {
           ADD NEW ACCOUNT :{" "}
           <span className="from-neutral-400 font-light">{props.group}</span>
         </p>
-        <TextInput label="Title"></TextInput>
-        <TextInput label="Username"></TextInput>
-        <TextInput label="Password" type="password"></TextInput>
+        <TextInput label="Title" ref={accountRef}></TextInput>
+        <TextInput label="Username" ref={usernameRef}></TextInput>
+        <TextInput
+          label="Password"
+          type="password"
+          ref={passwordRef}
+        ></TextInput>
         <textarea
           className="resize-none rounded-md bg-transparent p-1 ring-1 ring-neutral-200 focus:outline-none focus:ring-1 focus:ring-sky-400"
           rows={4}
           placeholder="Description"
+          ref={descRef}
         ></textarea>
         <div className="flex justify-end gap-2">
           <CancleButton onClick={() => props.state?.(false)}></CancleButton>
-          <SaveButton></SaveButton>
+          <SaveButton
+            onClick={() => {
+              const usr = usernameRef.current?.value ?? "";
+              const pwd = passwordRef.current?.value ?? "";
+              const desc = descRef.current?.value ?? "";
+              const acc = accountRef.current?.value ?? "";
+
+              if (usr === "" || pwd === "" || acc === "") return;
+
+              const data = `${window.btoa(acc)}.${window.btoa(
+                usr
+              )}.${window.btoa(pwd)}.${window.btoa(desc)}`;
+
+              props.callback?.(data);
+            }}
+          ></SaveButton>
         </div>
       </div>
     </div>
   );
-}
+};
 
 interface AccountCardProps {
   account?: string;
@@ -67,6 +92,7 @@ interface AccountCardProps {
 }
 
 function AccountCard(props: AccountCardProps) {
+  const [showpwd, setShowpwd] = useState<boolean>(false);
   return (
     <div
       className="fixed z-50 flex h-screen w-screen items-center justify-center bg-black/80 backdrop-blur"
@@ -96,8 +122,14 @@ function AccountCard(props: AccountCardProps) {
             className="grow bg-transparent px-2 focus:outline-none"
             value={props.password}
             disabled
-            type={"password"}
+            type={showpwd ? "text" : "password"}
           ></input>
+          <button
+            className="mr-1 h-6 w-6 self-center rounded-full bg-slate-300"
+            onClick={() => {
+              setShowpwd(!showpwd);
+            }}
+          ></button>
         </div>
         <textarea
           className="resize-none rounded-md bg-transparent p-1 ring-1 ring-neutral-200 focus:outline-none focus:ring-1 focus:ring-sky-400"

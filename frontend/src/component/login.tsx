@@ -1,4 +1,6 @@
 import React, { useRef } from "react";
+import sha256 from "fast-sha256";
+import { Buffer } from "buffer";
 
 export default function Login() {
   const SERVER = process.env.REACT_APP_SERVER;
@@ -28,7 +30,12 @@ export default function Login() {
         .then((res) => res.json())
         .then((data) => {
           if (data.Ok) {
-            localStorage.setItem("passman-jwt-auth", data.Ok.token);
+            const hash = sha256(Buffer.from(payload.password));
+            const buff = Buffer.from(hash);
+
+            sessionStorage.setItem("passman-hash", buff.toString("base64"));
+            sessionStorage.setItem("passman-jwt-auth", data.Ok.token);
+
             window.location.reload();
           }
         });
